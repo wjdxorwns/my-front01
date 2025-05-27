@@ -1,0 +1,34 @@
+.detail-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+.detail-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.detail-container img {
+  display: block;
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
+  margin: 0 auto 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.detail-info {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  color: #555;
+  text-align: center;
+}
+
+.detail-info strong {
+  color: #222;
+}

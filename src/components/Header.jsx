@@ -1,27 +1,57 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import '../styles/header.css';
+import { useEffect, useState } from "react";
 
 export default function Header() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
+  // 로그아웃 처리
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/");
+    // 리디렉션 하려면 navigate 사용
+};
+
+// 마운트 시 로그인 상태 확인
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  console.log("Header useEffect 실행됨. token:", token);
+  setIsLoggedIn(!!token); 
+}, [location]);
+
+console.log("Header 렌더링. isLoggedIn:", isLoggedIn);
+
+
   return (
     <header className="header">
-      <div>
-
+      <div className="header-inner">
+        {/* 왼쪽 : 로고 */}
         <div className="header-left">
           <Link to="/" className="logo-link">
-            <img className="logo-name" src="imgs/logo.png" alt="한국 ict" />
+            <img className="logo-image" src="/imgs/logo.png" alt="한국 ICT" />
           </Link>
         </div>
 
+        {/* 가운데 : 방명록, 게시판, 고객센터 */}
         <div className="header-center">
-          <Link to="/guestbook" >방명록</Link>
-          <Link to="/bbs" >게시판</Link>
-          <Link to="/support" >고객센터</Link>
+          <Link to="/guestbook"> 방명록 </Link>
+          <Link to="/bbs"> 게시판 </Link>
+          <Link to="/support"> 고객센터 </Link>
         </div>
 
+        {/* 오른쪽 : 로그인, 회원가입, 로그아웃 */}
         <div className="header-right">
-          <Link to="/login">로그인</Link>
-          <Link to="/signup">회원가입</Link>
+          {isLoggedIn ? (
+            <button onClick={handleLogout}>로그아웃</button>
+          ) : (
+            <>
+              <Link to="/login">로그인</Link>
+              <Link to="/signup">회원가입</Link>
+            </>
+          )}
         </div>
-        
       </div>
     </header>
   );
