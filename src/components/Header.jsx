@@ -6,9 +6,10 @@ export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const name = localStorage.getItem("name");
   // 로그아웃 처리
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("m_idx");
     setIsLoggedIn(false);
     navigate("/");
     // 리디렉션 하려면 navigate 사용
@@ -16,9 +17,9 @@ export default function Header() {
 
 // 마운트 시 로그인 상태 확인
 useEffect(() => {
-  const token = localStorage.getItem("token");
-  console.log("Header useEffect 실행됨. token:", token);
-  setIsLoggedIn(!!token); 
+  const m_idx = localStorage.getItem("m_idx");
+  console.log("Header useEffect 실행됨. m_idx:", m_idx);
+  setIsLoggedIn(!!m_idx); 
 }, [location]);
 
 console.log("Header 렌더링. isLoggedIn:", isLoggedIn);
@@ -44,7 +45,10 @@ console.log("Header 렌더링. isLoggedIn:", isLoggedIn);
         {/* 오른쪽 : 로그인, 회원가입, 로그아웃 */}
         <div className="header-right">
           {isLoggedIn ? (
+              <>
             <button onClick={handleLogout}>로그아웃</button>
+            <Link to="/mypage">마이페이지</Link>
+            </>
           ) : (
             <>
               <Link to="/login">로그인</Link>
@@ -52,6 +56,9 @@ console.log("Header 렌더링. isLoggedIn:", isLoggedIn);
             </>
           )}
         </div>
+        
+       {isLoggedIn && name && <p>{name} 님 환영합니다</p>}
+        
       </div>
     </header>
   );

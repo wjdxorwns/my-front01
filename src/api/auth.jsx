@@ -11,5 +11,10 @@ export const login = (m_id, m_pw) =>
   });
 
 
-export const Signup = (member) =>
-  api.post("/members/register", member);
+export const register = (form) =>
+  api.post("/members/register", form);
+
+export const mypage = (m_idx) =>
+  api.get(`/members/detail_list`, {
+    params: { m_idx }
+  });

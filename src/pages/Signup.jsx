@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import '../styles/login.css';
+import { register } from '../api/auth'; 
+import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
+    const navigate = useNavigate();
   const [form, setForm] = useState({
     m_id: '',
     m_pw: '',
@@ -15,7 +18,7 @@ export default function Signup() {
   const [isVerified, setIsVerified] = useState(false);
   const [canVerify, setCanVerify] = useState(false);
   const [code, setCode] = useState('');
-  const [sentCode, setSentCode] = useState(''); // 실제 서버라면 필요 없음
+  const [sentCode, setSentCode] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +31,6 @@ export default function Signup() {
   const handleSendCode = () => {
     if (!form.m_email) return;
 
-    // 인증 코드 발송 로직 (서버 호출로 대체 가능)
     const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
     alert(`(테스트용) 인증코드: ${randomCode}`);
     setSentCode(randomCode);
@@ -44,9 +46,24 @@ export default function Signup() {
     }
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     console.log("회원가입 정보:", form);
-    // 가입 처리 로직
+    
+    try {
+      const response = await register(form); // ✅ 실제 POST 요청
+      console.log("서버 응답:", response.data);
+
+      if (response.data.success) {
+        alert("회원가입 성공!");
+        // TODO: 리디렉션 또는 초기화 가능
+         navigate('/login');
+      } else {
+        alert("회원가입 실패: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("회원가입 에러:", error);
+      alert("서버 오류 발생");
+    }
   };
 
   return (
@@ -60,11 +77,7 @@ export default function Signup() {
             value={form.m_email}
             onChange={handleChange}
           />
-          <button
-            type="button"
-            onClick={handleSendCode}
-            disabled={!form.m_email}
-          >
+          <button type="button" onClick={handleSendCode} disabled={!form.m_email}>
             인증메일 보내기
           </button>
         </div>
@@ -83,55 +96,14 @@ export default function Signup() {
           </div>
         )}
 
-        {/* 나머지 입력 필드들 */}
-        <input
-          type="text"
-          name="m_id"
-          placeholder="아이디"
-          value={form.m_id}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="m_pw"
-          placeholder="비밀번호"
-          value={form.m_pw}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="m_name"
-          placeholder="이름"
-          value={form.m_name}
-          onChange={handleChange}
-        />
-        <input
-          type="tel"
-          name="m_phone"
-          placeholder="전화번호"
-          value={form.m_phone}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="m_addr"
-          placeholder="주소"
-          value={form.m_addr}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="m_addr2"
-          placeholder="상세주소"
-          value={form.m_addr2}
-          onChange={handleChange}
-        />
+        <input type="text" name="m_id" placeholder="아이디" value={form.m_id} onChange={handleChange} />
+        <input type="password" name="m_pw" placeholder="비밀번호" value={form.m_pw} onChange={handleChange} />
+        <input type="text" name="m_name" placeholder="이름" value={form.m_name} onChange={handleChange} />
+        <input type="tel" name="m_phone" placeholder="전화번호" value={form.m_phone} onChange={handleChange} />
+        <input type="text" name="m_addr" placeholder="주소" value={form.m_addr} onChange={handleChange} />
+        <input type="text" name="m_addr2" placeholder="상세주소" value={form.m_addr2} onChange={handleChange} />
 
-        <button
-          type="submit"
-          onClick={handleSignup}
-          disabled={!isVerified}
-        >
+        <button type="submit" onClick={handleSignup} disabled={!isVerified}>
           회원가입
         </button>
       </form>

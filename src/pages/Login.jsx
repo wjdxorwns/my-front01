@@ -13,9 +13,10 @@ export default function Login(){
         try {
           const response =await login(m_id,m_pw);
           console.log(response);
-
-          
-          localStorage.setItem("token","admin")
+          const m_idx = response.data.data.m_idx
+          const m_name = response.data.data.m_name
+          localStorage.setItem("m_idx",m_idx)
+          localStorage.setItem("name",m_name)
           navigate('/');
           //로그인 성공하면 home으로 이동
           //단 이동 전에 로그인 성공했다고 기억해야한다
