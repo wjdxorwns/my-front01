@@ -18,3 +18,6 @@ export const api = axios.create({
     },
     withCredentials: true,   // CORS 허용
 });
+
+
+

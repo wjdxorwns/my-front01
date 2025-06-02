@@ -17,6 +17,7 @@
 .header-right {
     display: flex;
     align-items: center;
+      gap: 20px;
 }
 .header-left{
     flex: 1;
