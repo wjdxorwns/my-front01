@@ -42,35 +42,29 @@ api.interceptors.request.use(
     }
 );
 
-
 api.interceptors.response.use(
-  res => res,
-  async (error) => {
-    const { config, response } = error;
+    // 정상적인 응답은 통과
+    res => res ,
+    async (error) =>{
+        const {config, response} = error ;
+        // 401 에러 => accessToken 만료되면
+        if(response?.status === 401 && !config._retry){
+            config._retry = true; // 한번만 재 시도하도록 설정
+            try {
+                const tokens = JSON.parse(localStorage.getItem("tokens"));
+                const result = await api.post("/members/refresh",{
+                    refreshToken : tokens.refreshToken
+                });
+                const {accessToken, refreshToken} = result.data.data;
+                localStorage.setItem("tokens", JSON.stringify({accessToken, refreshToken}));
 
-    if (response?.status === 401 && !config._retry) {
-      config._retry = true;
-
-      try {
-
-        const tokens = JSON.parse(localStorage.getItem("tokens") || "{}");
-        const result = await api.post("/members/refresh", 
-          { refreshToken : tokens.refreshToken });
-          
-         const {accessToken,refreshToken} = result.data.data;
-
-         localStorage.setItem("tokens",JSON.stringify({accessToken,refreshToken}))
-
-         config.headers.Authorization= `Bearer ${accessToken}`;
-         return api(config);
-       
-      } catch (error) {
-        localStorage.clear();
-        window.location.href = "/login";
-        return Promise.reject(error);
-      }
-    }
-
+                config.headers.Authorization = `Bearer ${accessToken}`;
+                return api(config);
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = "/login";
+        }
+    } 
     return Promise.reject(error);
-  }
+    }
 );

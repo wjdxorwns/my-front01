@@ -22,6 +22,17 @@ export default function Header(){
     // 로그아웃 처리
      const handleLogout = () => {
         zu_logout(); // Zustand 
+
+        // 로컬스토리지 제거
+        localStorage.removeItem("snsProvider");
+        //localStorage.removeItem("tokens");
+
+        // 쿠키 삭제
+        document.cookie = "snsProvider=; path=/; max-age=0";
+        document.cookie = "authToken=; path=/; max-age=0";
+
+        // 초기화
+        useAuthStore.getState().zu_logout();
         navigate("/");
      }
   
@@ -31,7 +42,7 @@ export default function Header(){
             {/* 왼쪽 : 로고 */}
             <div className="header-left">
                 <Link to="/" className="logo-link">
-                <img className="logo-image" src="imgs/logo.png" alt="한국 ICT" />
+                <img className="logo-image" src="/logo.png" alt="한국 ICT" />
                 </Link>
             </div>
             {/* 가운데 : 방명록, 게시판, 고객센터 */}

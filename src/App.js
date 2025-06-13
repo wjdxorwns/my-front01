@@ -10,6 +10,10 @@ import MyPage from './pages/MyPage';
 import { AuthProvider } from './context/AuthContext';
 import useAuthStore from './store/authStore';
 import { useEffect } from 'react';
+import OAuth2RedirectHandler from './components/OAuth2RedirectHandler';
+
+import GuestbookDetail from './pages/GuestBookDetail';
+import Guestbook from './pages/Guestbook';
 
 function App() {
 
@@ -32,6 +36,9 @@ function App() {
                 <Route  path="/signup" element={<Signup />}/>
                 <Route  path="/mypage" element={<MyPage />}/>
                 <Route  path="/productdetail/:id" element={<ProductDetail />}/>
+                <Route  path="/oauth2/redirect" element={<OAuth2RedirectHandler  />}/>
+                <Route path='/guestbook' element={<Guestbook/>}/>
+                <Route path="/guestbook/:gb_idx" element={<GuestbookDetail />} />
               </Routes>
             </div>
           <Footer />
